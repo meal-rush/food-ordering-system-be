@@ -1,16 +1,19 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+import { connectDB } from './db/db';
 import { setOrderRoutes } from './routes/orderRoutes';
-import { authenticate } from './middlewares/authMiddleware';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
-app.use(bodyParser.json());
-app.use(authenticate);
+// Middleware
+app.use(express.json());
 
+// Connect to the database
+connectDB();
+
+// Set up routes
 setOrderRoutes(app);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
