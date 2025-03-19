@@ -1,6 +1,10 @@
 import WebSocket, { WebSocketServer } from 'ws';
 import { registerUser, loginUser, authenticate } from './services/authService';
+import { connectToDatabase } from './services/dbService';
 import { Role } from './models/roles';
+
+// Connect to the database
+connectToDatabase();
 
 const wss = new WebSocketServer({ port: 9001 });
 
