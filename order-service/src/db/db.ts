@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import logger from '../utils/logger'; // Import the logger
 
 // Load environment variables from .env file
 dotenv.config();
@@ -16,19 +17,19 @@ export const connectDB = async () => {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log('Database connected successfully');
+        logger.info('Database connected successfully'); // Log success
 
         // Ensure at least one collection exists
         const db = mongoose.connection;
         const collections = await db.db.listCollections().toArray();
         if (collections.length === 0) {
-            console.log('No collections found. Creating a default collection...');
+            logger.info('No collections found. Creating a default collection...');
             const defaultCollection = db.collection('defaultCollection');
             await defaultCollection.insertOne({ initialized: true });
-            console.log('Default collection created with a sample document.');
+            logger.info('Default collection created with a sample document.');
         }
     } catch (error) {
-        console.error('Database connection failed:', (error as Error).message);
+        logger.error(`Database connection failed: ${(error as Error).message}`); // Log error
         process.exit(1);
     }
 };
