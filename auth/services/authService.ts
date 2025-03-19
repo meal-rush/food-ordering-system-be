@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Role } from '../models/roles';
+import logger from '../utils/logger';
 
 type HttpResponse = {
   end: (body?: string) => void;
@@ -14,17 +15,21 @@ const users: { [key: string]: { password: string; role: Role } } = {};
 
 export async function registerUser({ username, password, role }: { username: string; password: string; role: Role }) {
   if (users[username]) {
+    logger.warn(`Attempt to register an existing user: ${username}`);
     throw new Error('User already exists');
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   users[username] = { password: hashedPassword, role };
+  logger.info(`User registered successfully: ${username}`);
 }
 
 export async function loginUser({ username, password }: { username: string; password: string }) {
   const user = users[username];
   if (!user || !(await bcrypt.compare(password, user.password))) {
+    logger.warn(`Invalid login attempt for user: ${username}`);
     throw new Error('Invalid credentials');
   }
+  logger.info(`User logged in successfully: ${username}`);
   return jwt.sign({ username, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
 }
 
