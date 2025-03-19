@@ -6,6 +6,9 @@ class AuthService {
   }
 
   async register(username, password, role) {
+    if (!password) {
+      throw new Error("Password is required");
+    }
     const hashedPassword = await this.bcrypt.hash(password, 10);
     const user = new this.userModel({
       username,
