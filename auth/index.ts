@@ -13,13 +13,13 @@ wss.on('connection', (ws: WebSocket) => {
     try {
       const { route, data }: { route: string; data: any } = JSON.parse(message);
 
-      if (route === '/register') {
+      if (route === '/api/v1/register') {
         await registerUser(data);
         ws.send(JSON.stringify({ message: 'User registered successfully' }));
-      } else if (route === '/login') {
+      } else if (route === '/api/v1/login') {
         const token = await loginUser(data);
         ws.send(JSON.stringify({ token }));
-      } else if (route === '/protected') {
+      } else if (route === '/api/v1/protected') {
         authenticate([Role.Customer, Role.RestaurantAdmin])(
           { send: ws.send.bind(ws) } as any,
           { headers: { authorization: data.token } } as any,
