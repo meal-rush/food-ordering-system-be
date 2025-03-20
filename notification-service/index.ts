@@ -1,12 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config(); // Ensure this is at the very top
+
 import express, { Application } from "express";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 
 import notificationRoutes from "./routes/notificationRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
 import orderRoutes from "./routes/orderRoutes";
-
-dotenv.config();
 
 const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || "3004", 10);
