@@ -110,30 +110,6 @@ Webhook endpoint to listen for order status changes and send notifications.
   "message": "Order status notification sent successfully"
 }
 
-### POST /notifications/send-preference
-Send notifications via different channels (email, SMS, push notifications) based on user preferences.
-
-#### Request Body
-```json
-{
-  "recipient": "recipient@example.com",
-  "message": "Your order has been updated!",
-  "preferences": {
-    "email": true,
-    "sms": false,
-    "push": true
-  },
-  "subscription": { /* Push subscription object, required if preferences.push is true */ }
-}
-```
-
-#### Response
-```json
-{
-  "success": true,
-  "message": "Notifications sent based on user preferences"
-}
-
 ## How to Run
 1. Install dependencies: `npm install`
 2. Create a `.env` file in the `notification-service` directory with the following content:
