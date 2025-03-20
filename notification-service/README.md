@@ -4,6 +4,8 @@ This is a basic notification microservice for the food ordering system.
 
 ## Features
 - Send notifications (e.g., email, SMS) via a simple API.
+- Retry mechanism for failed notifications (up to 3 retries).
+- Logs all notification events for debugging and analytics.
 
 ## API Endpoints
 

@@ -17,6 +17,8 @@ export const consumeFromKafka = async () => {
       const notification = JSON.parse(message.value?.toString() || "{}");
       const { recipient, type, content, subscription } = notification;
 
+      console.log(`[${new Date().toISOString()}] Processing notification:`, notification);
+
       try {
         if (type === "email") {
           await sendEmail(recipient, "Notification", content);

@@ -28,16 +28,42 @@ webPush.setVapidDetails(
   process.env.WEB_PUSH_PRIVATE_KEY
 );
 
+const logNotificationEvent = (type: string, recipient: string, status: string, message: string) => {
+  console.log(`[${new Date().toISOString()}] Notification Event:`, {
+    type,
+    recipient,
+    status,
+    message,
+  });
+};
+
+const retry = async (fn: () => Promise<void>, retries: number = 3) => {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await fn();
+      return;
+    } catch (error) {
+      if (attempt === retries) {
+        throw error;
+      }
+      console.warn(`Retrying (${attempt}/${retries})...`);
+    }
+  }
+};
+
 export const sendEmail = async (recipient: string, subject: string, message: string) => {
   try {
-    await emailTransporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: recipient,
-      subject,
-      text: message,
+    await retry(async () => {
+      await emailTransporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: recipient,
+        subject,
+        text: message,
+      });
     });
-    console.log(`Email sent to ${recipient}`);
+    logNotificationEvent("email", recipient, "success", message);
   } catch (error) {
+    logNotificationEvent("email", recipient, "failure", message);
     console.error("Error sending email:", error);
     throw new Error("Failed to send email");
   }
@@ -45,13 +71,16 @@ export const sendEmail = async (recipient: string, subject: string, message: str
 
 export const sendSMS = async (recipient: string, message: string) => {
   try {
-    await twilioClient.messages.create({
-      body: message,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: recipient,
+    await retry(async () => {
+      await twilioClient.messages.create({
+        body: message,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: recipient,
+      });
     });
-    console.log(`SMS sent to ${recipient}`);
+    logNotificationEvent("sms", recipient, "success", message);
   } catch (error) {
+    logNotificationEvent("sms", recipient, "failure", message);
     console.error("Error sending SMS:", error);
     throw new Error("Failed to send SMS");
   }
@@ -59,9 +88,12 @@ export const sendSMS = async (recipient: string, message: string) => {
 
 export const sendPushNotification = async (subscription: webPush.PushSubscription, message: string) => {
   try {
-    await webPush.sendNotification(subscription, message);
-    console.log("Push notification sent");
+    await retry(async () => {
+      await webPush.sendNotification(subscription, message);
+    });
+    logNotificationEvent("push", JSON.stringify(subscription), "success", message);
   } catch (error) {
+    logNotificationEvent("push", JSON.stringify(subscription), "failure", message);
     console.error("Error sending push notification:", error);
     throw new Error("Failed to send push notification");
   }
