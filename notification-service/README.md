@@ -151,6 +151,41 @@ Update a user's notification preferences.
 }
 ```
 
+### GET /admin/notifications
+Retrieve all notification statuses.
+
+#### Response
+```json
+{
+  "success": true,
+  "notifications": {
+    "notificationId1": {
+      "type": "email",
+      "recipient": "recipient@example.com",
+      "status": "success",
+      "message": "Your order has been placed successfully!"
+    },
+    "notificationId2": {
+      "type": "sms",
+      "recipient": "+1234567890",
+      "status": "failure",
+      "message": "Your payment has been processed."
+    }
+  }
+}
+```
+
+### POST /admin/notifications/resend/:notificationId
+Resend a failed notification.
+
+#### Response
+```json
+{
+  "success": true,
+  "message": "Notification resent successfully"
+}
+```
+
 ## How to Run
 1. Install dependencies: `npm install`
 2. Create a `.env` file in the `notification-service` directory with the following content:

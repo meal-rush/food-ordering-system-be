@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import twilio from "twilio";
 import webPush from "web-push";
+import { v4 as uuidv4 } from "uuid";
 
 // Ensure VAPID keys are set
 if (!process.env.WEB_PUSH_PUBLIC_KEY || !process.env.WEB_PUSH_PRIVATE_KEY) {
@@ -28,8 +29,14 @@ webPush.setVapidDetails(
   process.env.WEB_PUSH_PRIVATE_KEY
 );
 
-const logNotificationEvent = (type: string, recipient: string, status: string, message: string) => {
-  console.log(`[${new Date().toISOString()}] Notification Event:`, {
+// In-memory storage for notification statuses (replace with a database in production)
+export const notificationStatuses: Record<string, { type: string; recipient: string; status: string; message: string; subscription?: any }> = {};
+
+const logNotificationStatus = (type: string, recipient: string, status: string, message: string, subscription?: any) => {
+  const notificationId = uuidv4();
+  notificationStatuses[notificationId] = { type, recipient, status, message, subscription };
+  console.log(`[${new Date().toISOString()}] Notification Status Logged:`, {
+    notificationId,
     type,
     recipient,
     status,
@@ -61,9 +68,9 @@ export const sendEmail = async (recipient: string, subject: string, message: str
         text: message,
       });
     });
-    logNotificationEvent("email", recipient, "success", message);
+    logNotificationStatus("email", recipient, "success", message);
   } catch (error) {
-    logNotificationEvent("email", recipient, "failure", message);
+    logNotificationStatus("email", recipient, "failure", message);
     console.error("Error sending email:", error);
     throw new Error("Failed to send email");
   }
@@ -78,9 +85,9 @@ export const sendSMS = async (recipient: string, message: string) => {
         to: recipient,
       });
     });
-    logNotificationEvent("sms", recipient, "success", message);
+    logNotificationStatus("sms", recipient, "success", message);
   } catch (error) {
-    logNotificationEvent("sms", recipient, "failure", message);
+    logNotificationStatus("sms", recipient, "failure", message);
     console.error("Error sending SMS:", error);
     throw new Error("Failed to send SMS");
   }
@@ -91,9 +98,9 @@ export const sendPushNotification = async (subscription: webPush.PushSubscriptio
     await retry(async () => {
       await webPush.sendNotification(subscription, message);
     });
-    logNotificationEvent("push", JSON.stringify(subscription), "success", message);
+    logNotificationStatus("push", JSON.stringify(subscription), "success", message);
   } catch (error) {
-    logNotificationEvent("push", JSON.stringify(subscription), "failure", message);
+    logNotificationStatus("push", JSON.stringify(subscription), "failure", message);
     console.error("Error sending push notification:", error);
     throw new Error("Failed to send push notification");
   }

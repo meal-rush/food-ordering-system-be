@@ -9,6 +9,7 @@ import paymentRoutes from "./routes/paymentRoutes";
 import orderRoutes from "./routes/orderRoutes";
 import webhookRoutes from "./routes/webhookRoutes";
 import userPreferencesRoutes from "./routes/userPreferencesRoutes"; // Import user preferences routes
+import adminRoutes from "./routes/adminRoutes"; // Import admin routes
 import { consumeFromKafka } from "./kafka/consumer"; // Import Kafka consumer
 
 const app: Application = express();
@@ -22,6 +23,7 @@ app.use("/payments", paymentRoutes);
 app.use("/orders", orderRoutes);
 app.use("/webhooks", webhookRoutes);
 app.use("/users", userPreferencesRoutes); // Register user preferences routes
+app.use("/admin", adminRoutes); // Register admin routes
 
 // Start Kafka consumer
 consumeFromKafka().catch((error) => {
