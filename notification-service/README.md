@@ -29,5 +29,9 @@ Send a notification.
 
 ## How to Run
 1. Install dependencies: `npm install`
-2. Start the server: `npm start`
-3. The service will run on `http://localhost:3001`.
+2. Create a `.env` file in the `notification-service` directory with the following content:
+   ```
+   PORT=3004
+   ```
+3. Start the server: `npm start`
+4. The service will run on the port specified in the `.env` file (default is `3004`).
