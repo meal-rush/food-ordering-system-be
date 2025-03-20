@@ -2,19 +2,10 @@ import nodemailer from "nodemailer";
 import twilio from "twilio";
 import webPush from "web-push";
 
-// Debugging: Log VAPID keys
-console.log("WEB_PUSH_PUBLIC_KEY:", process.env.WEB_PUSH_PUBLIC_KEY);
-console.log("WEB_PUSH_PRIVATE_KEY:", process.env.WEB_PUSH_PRIVATE_KEY);
-
 // Ensure VAPID keys are set
 if (!process.env.WEB_PUSH_PUBLIC_KEY || !process.env.WEB_PUSH_PRIVATE_KEY) {
   throw new Error("VAPID keys are not set. Please check your .env file.");
 }
-
-// Debugging: Log Twilio environment variables
-console.log("TWILIO_ACCOUNT_SID:", process.env.TWILIO_ACCOUNT_SID);
-console.log("TWILIO_AUTH_TOKEN:", process.env.TWILIO_AUTH_TOKEN);
-console.log("TWILIO_PHONE_NUMBER:", process.env.TWILIO_PHONE_NUMBER);
 
 // Ensure Twilio credentials are set
 if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !process.env.TWILIO_PHONE_NUMBER) {
