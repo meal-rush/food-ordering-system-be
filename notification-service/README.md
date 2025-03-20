@@ -27,6 +27,25 @@ Send a notification.
 }
 ```
 
+### POST /send-payment-notification
+Send a payment notification.
+
+#### Request Body
+```json
+{
+  "recipient": "recipient@example.com",
+  "paymentId": "98765",
+  "status": "successful" // or "failed", "pending", etc.
+}
+```
+
+#### Response
+```json
+{
+  "success": true,
+  "message": "Payment notification sent successfully"
+}
+
 ## How to Run
 1. Install dependencies: `npm install`
 2. Create a `.env` file in the `notification-service` directory with the following content:
