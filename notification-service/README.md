@@ -45,6 +45,26 @@ Send a payment notification.
   "success": true,
   "message": "Payment notification sent successfully"
 }
+```
+
+### POST /trigger-create-order-notification
+Trigger a notification for creating an order.
+
+#### Request Body
+```json
+{
+  "recipient": "recipient@example.com",
+  "orderId": "12345",
+  "items": ["Pizza", "Burger", "Soda"]
+}
+```
+
+#### Response
+```json
+{
+  "success": true,
+  "message": "Create order notification sent successfully"
+}
 
 ## How to Run
 1. Install dependencies: `npm install`
