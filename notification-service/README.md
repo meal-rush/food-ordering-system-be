@@ -66,6 +66,27 @@ Trigger a notification for creating an order.
   "message": "Create order notification sent successfully"
 }
 
+### POST /orders/status-update
+Trigger a notification for an order status update.
+
+#### Request Body
+```json
+{
+  "recipient": "recipient@example.com",
+  "orderId": "12345",
+  "status": "confirmed", // or "prepared", "out for delivery", "delivered"
+  "notificationType": "email", // or "sms", "push"
+  "subscription": { /* Push subscription object, required if notificationType is "push" */ }
+}
+```
+
+#### Response
+```json
+{
+  "success": true,
+  "message": "Order status notification sent successfully"
+}
+
 ## How to Run
 1. Install dependencies: `npm install`
 2. Create a `.env` file in the `notification-service` directory with the following content:
