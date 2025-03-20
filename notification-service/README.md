@@ -65,9 +65,32 @@ Trigger a notification for creating an order.
   "success": true,
   "message": "Create order notification sent successfully"
 }
+```
 
 ### POST /orders/status-update
 Trigger a notification for an order status update.
+
+#### Request Body
+```json
+{
+  "recipient": "recipient@example.com",
+  "orderId": "12345",
+  "status": "confirmed", // or "prepared", "out for delivery", "delivered"
+  "notificationType": "email", // or "sms", "push"
+  "subscription": { /* Push subscription object, required if notificationType is "push" */ }
+}
+```
+
+#### Response
+```json
+{
+  "success": true,
+  "message": "Order status notification sent successfully"
+}
+```
+
+### POST /webhooks/order-status
+Webhook endpoint to listen for order status changes and send notifications.
 
 #### Request Body
 ```json
