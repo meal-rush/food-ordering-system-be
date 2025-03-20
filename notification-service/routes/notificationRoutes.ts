@@ -29,4 +29,41 @@ router.post("/send", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/send-preference", async (req: Request, res: Response) => {
+  const {
+    recipient,
+    message,
+    preferences,
+    subscription,
+  }: {
+    recipient: string;
+    message: string;
+    preferences: { email: boolean; sms: boolean; push: boolean };
+    subscription?: any;
+  } = req.body;
+
+  if (!recipient || !message || !preferences) {
+    return res
+      .status(400)
+      .json({ error: "Missing required fields: recipient, message, preferences" });
+  }
+
+  try {
+    if (preferences.email) {
+      await sendEmail(recipient, "Notification", message);
+    }
+    if (preferences.sms) {
+      await sendSMS(recipient, message);
+    }
+    if (preferences.push && subscription) {
+      await sendPushNotification(subscription, message);
+    }
+
+    res.status(200).json({ success: true, message: "Notifications sent based on user preferences" });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+    res.status(500).json({ error: errorMessage });
+  }
+});
+
 export default router;
