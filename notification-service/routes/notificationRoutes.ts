@@ -1,8 +1,9 @@
-const express = require("express");
+import express, { Request, Response } from "express";
+
 const router = express.Router();
 
-router.post("/send", (req, res) => {
-  const { type, recipient, message } = req.body;
+router.post("/send", (req: Request, res: Response) => {
+  const { type, recipient, message }: { type: string; recipient: string; message: string } = req.body;
 
   if (!type || !recipient || !message) {
     return res
@@ -17,4 +18,4 @@ router.post("/send", (req, res) => {
     .json({ success: true, message: "Notification sent successfully" });
 });
 
-module.exports = router;
+export default router;

@@ -1,8 +1,9 @@
-const express = require("express");
+import express, { Request, Response } from "express";
+
 const router = express.Router();
 
-router.post("/send", (req, res) => {
-  const { recipient, paymentId, status } = req.body;
+router.post("/send", (req: Request, res: Response) => {
+  const { recipient, paymentId, status }: { recipient: string; paymentId: string; status: string } = req.body;
 
   if (!recipient || !paymentId || !status) {
     return res
@@ -19,4 +20,4 @@ router.post("/send", (req, res) => {
     .json({ success: true, message: "Payment notification sent successfully" });
 });
 
-module.exports = router;
+export default router;

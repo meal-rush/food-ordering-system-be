@@ -1,8 +1,9 @@
-const express = require("express");
+import express, { Request, Response } from "express";
+
 const router = express.Router();
 
-router.post("/create", (req, res) => {
-  const { recipient, orderId, items } = req.body;
+router.post("/create", (req: Request, res: Response) => {
+  const { recipient, orderId, items }: { recipient: string; orderId: string; items: string[] } = req.body;
 
   if (!recipient || !orderId || !items || !Array.isArray(items)) {
     return res
@@ -22,4 +23,4 @@ router.post("/create", (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;
