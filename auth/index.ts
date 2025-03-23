@@ -1,46 +1,42 @@
-import WebSocket, { WebSocketServer } from 'ws';
-import { registerUser, loginUser, authenticate } from './services/authService';
-import { connectToDatabase } from './services/dbService';
-import { Role } from './models/roles';
+import express, { Request, Response, NextFunction } from 'express';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import dotenv from 'dotenv';
 import logger from './utils/logger';
 
-// Connect to the database
-connectToDatabase();
+dotenv.config();
 
-const wss = new WebSocketServer({ port: 9001 });
+const app = express();
+const PORT = process.env.PORT || 9001;
 
-wss.on('connection', (ws: WebSocket) => {
-  logger.info('New WebSocket connection established');
-  ws.on('message', async (message: string) => {
-    try {
-      const { route, data }: { route: string; data: any } = JSON.parse(message);
-      logger.info(`Received message on route: ${route}`);
-
-      if (route === '/api/v1/register') {
-        await registerUser(data);
-        ws.send(JSON.stringify({ message: 'User registered successfully' }));
-      } else if (route === '/api/v1/login') {
-        const token = await loginUser(data);
-        ws.send(JSON.stringify({ token }));
-      } else if (route === '/api/v1/protected') {
-        authenticate([Role.Customer, Role.RestaurantAdmin])(
-          { send: ws.send.bind(ws) } as any,
-          { headers: { authorization: data.token } } as any,
-          () => ws.send(JSON.stringify({ message: 'Access granted to protected route' }))
-        );
-      } else {
-        ws.send(JSON.stringify({ error: 'Unknown route' }));
-      }
-    } catch (err) {
-      if (err instanceof Error) {
-        logger.error(`Error processing message: ${err.message}`);
-        ws.send(JSON.stringify({ error: err.message }));
-      } else {
-        logger.error('An unknown error occurred');
-        ws.send(JSON.stringify({ error: 'An unknown error occurred' }));
-      }
-    }
-  });
+// Middleware for logging requests
+app.use((req: Request, res: Response, next: NextFunction) => {
+  logger.info(`Incoming request: ${req.method} ${req.url}`);
+  next();
 });
 
-logger.info('Auth microservice running on port 9001');
+// Proxy configuration
+const services = {
+  '/api/orders': 'http://localhost:9002', // Order service
+  '/api/notifications': 'http://localhost:3004', // Notification service
+  '/api/payments': 'http://localhost:9003', // Payment service
+};
+
+// Set up proxy routes
+Object.entries(services).forEach(([route, target]) => {
+  app.use(
+    route,
+    createProxyMiddleware({
+      target,
+      changeOrigin: true,
+      pathRewrite: (path) => path.replace(route, ''), // Remove the base route
+      onProxyReq: (proxyReq, req: Request) => {
+        logger.info(`Proxying request to: ${target}${req.url}`);
+      },
+    })
+  );
+});
+
+// Start the API gateway
+app.listen(PORT, () => {
+  logger.info(`API Gateway running on http://localhost:${PORT}`);
+});
