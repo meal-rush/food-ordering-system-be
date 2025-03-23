@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      - WEB_PUSH_PUBLIC_KEY=${WEB_PUSH_PUBLIC_KEY}
+      - WEB_PUSH_PRIVATE_KEY=${WEB_PUSH_PRIVATE_KEY}
+      - KAFKA_BROKER=${KAFKA_BROKER}
+    volumes:
+      - ./notification-service:/app
+    depends_on:
+      - kafka
+
+  kafka:
+    image: bitnami/kafka:latest
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    ports:
+      - "2181:2181"
