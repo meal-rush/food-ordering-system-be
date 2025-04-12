@@ -1,0 +1,22 @@
+type User {
+  _id: ID!
+  name: String!
+  email: String!
+  phone: String
+  createdAt: String
+  addresses: [Address]
+}
+
+type Address {
+  location: Location
+  deliveryAddress: String
+}
+
+type Location {
+  coordinates: [Float]
+}
+
+type Query {
+  # ...existing queries...
+  users: [User]
+}
