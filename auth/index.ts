@@ -1,21 +1,28 @@
 import { ApolloServer } from 'apollo-server';
-import { connectToDatabase } from './services/dbService';
-import { typeDefs } from './graphql/schema';
+
+import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
+import { connectToDatabase } from './services/dbService';
+
+
 import logger from './utils/logger';
 
 // Connect to the database
 connectToDatabase();
 
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    const token = req.headers.authorization || '';
-    return { token };
+
+    // Add any context setup here, such as authentication
+    return { headers: req.headers };
   },
 });
 
+// Start the server
 server.listen({ port: 9001 }).then(({ url }) => {
-  logger.info(`Auth microservice running at ${url}`);
+  logger.info(`GraphQL server running at ${url}`);
+
 });
