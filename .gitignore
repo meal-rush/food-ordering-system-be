@@ -5,5 +5,5 @@ logs/*.log
 
 node_modules/
 dist/
-.env
 
+config.bat

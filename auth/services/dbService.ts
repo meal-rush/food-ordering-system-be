@@ -12,7 +12,7 @@ export async function connectToDatabase() {
   }
 
   try {
-    await mongoose.connect(dbUri); // Simplified connection
+    await mongoose.connect(dbUri); // Removed deprecated options
     logger.info('Connected to the database successfully');
   } catch (error) {
     logger.error(`Failed to connect to the database: ${error}`);
