@@ -1,0 +1,13 @@
+2025-04-12 20:53:44 [INFO]: Auth microservice running on port 9001
+2025-04-12 20:57:51 [INFO]: Auth microservice running on port 9001
+2025-04-12 20:57:52 [INFO]: Connected to the database successfully
+2025-04-12 20:58:25 [INFO]: Auth microservice running on port 9001
+2025-04-12 20:58:27 [INFO]: Connected to the database successfully
+2025-04-12 20:59:39 [INFO]: Auth microservice running on port 9001
+2025-04-12 20:59:40 [INFO]: Connected to the database successfully
+2025-04-12 21:01:37 [INFO]: Auth microservice is ready for GraphQL integration
+2025-04-12 21:01:39 [INFO]: Connected to the database successfully
+2025-04-12 21:06:01 [INFO]: GraphQL server running at http://localhost:9001/
+2025-04-12 21:06:03 [INFO]: Connected to the database successfully
+2025-04-12 21:07:29 [INFO]: User registered successfully: testuser
+2025-04-12 21:07:50 [INFO]: User logged in successfully: testuser

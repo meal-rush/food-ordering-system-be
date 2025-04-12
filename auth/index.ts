@@ -1,42 +1,33 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
-import dotenv from 'dotenv';
+
+import { ApolloServer } from 'apollo-server';
+
+import { typeDefs } from './graphql/typeDefs';
+import { resolvers } from './graphql/resolvers';
+import { connectToDatabase } from './services/dbService';
+
+
+
+
+
 import logger from './utils/logger';
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 9001;
 
-// Middleware for logging requests
-app.use((req: Request, res: Response, next: NextFunction) => {
-  logger.info(`Incoming request: ${req.method} ${req.url}`);
-  next();
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => {
+
+    // Add any context setup here, such as authentication
+    return { headers: req.headers };
+  },
 });
 
-// Proxy configuration
-const services = {
-  '/api/orders': 'http://localhost:9002', // Order service
-  '/api/notifications': 'http://localhost:3004', // Notification service
-  '/api/payments': 'http://localhost:9003', // Payment service
-};
+// Start the server
+server.listen({ port: 9001 }).then(({ url }) => {
+  logger.info(`GraphQL server running at ${url}`);
 
-// Set up proxy routes
-Object.entries(services).forEach(([route, target]) => {
-  app.use(
-    route,
-    createProxyMiddleware({
-      target,
-      changeOrigin: true,
-      pathRewrite: (path) => path.replace(route, ''), // Remove the base route
-      onProxyReq: (proxyReq, req: Request) => {
-        logger.info(`Proxying request to: ${target}${req.url}`);
-      },
-    })
-  );
-});
 
-// Start the API gateway
-app.listen(PORT, () => {
-  logger.info(`API Gateway running on http://localhost:${PORT}`);
 });
