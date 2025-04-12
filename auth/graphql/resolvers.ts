@@ -1,6 +1,7 @@
 import { registerUser, loginUser } from '../services/authService';
 import { Role } from '../models/roles';
 
+
 export const resolvers = {
   Query: {
     hello: () => 'Hello, world!',
@@ -17,5 +18,6 @@ export const resolvers = {
       const token = await loginUser({ username, password });
       return token;
     },
+
   },
 };
