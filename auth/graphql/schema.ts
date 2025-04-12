@@ -1,13 +1,26 @@
 import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
+  type Location {
+    coordinates: [Float!]!
+  }
+
+  type Address {
+    location: Location!
+    deliveryAddress: String!
+  }
+
   type User {
-    username: String!
-    role: String!
-    token: String
+    _id: ID!
+    name: String!
+    email: String!
+    phone: String!
+    createdAt: String!
+    addresses: [Address!]!
   }
 
   type Query {
+    users: [User!]!
     login(username: String!, password: String!): User
   }
 
