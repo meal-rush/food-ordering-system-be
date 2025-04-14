@@ -1,7 +1,7 @@
 {
 	"name": "server",
 	"version": "1.0.0",
-	"description": "backend for user management hela ayu web app",
+	"description": "backend for user management Meal Rush web app",
 	"main": "server.js",
 	"scripts": {
 		"start": "nodemon backend/server.js",
