@@ -1,5 +1,4 @@
-const StripeKey =
-	"sk_test_51MzPn6ECpT6ND4zo8vk7nXcJnuRCvoYpJ8bf5ct1rvBWXzFFUVNbeLl8G0azQyNskSblztUOuq7ioGDBcZPOOyjW00tbE0q4fG";
+const StripeKey = process.env.STRIPE_SECRET_KEY; // Use environment variable for the Stripe key
 const Stripe = require("stripe");
 const stripe = new Stripe(StripeKey);
 
@@ -7,6 +6,7 @@ const stripe = new Stripe(StripeKey);
 const createPaymentIntent = async (req, res) => {
 	let { amount, id } = req.body;
 	try {
+		console.log("Creating payment intent with:", { amount, id }); // Log request data
 		const payment = await stripe.paymentIntents.create({
 			amount,
 			currency: "USD",
@@ -20,10 +20,11 @@ const createPaymentIntent = async (req, res) => {
 			payment,
 		});
 	} catch (error) {
-		console.log("Error", error);
-		res.json({
+		console.error("Error creating payment intent:", error); // Log error details
+		res.status(400).json({
 			message: "Payment failed",
 			success: false,
+			error: error.message, // Include error message in response
 		});
 	}
 };
