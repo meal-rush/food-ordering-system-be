@@ -42,5 +42,6 @@ spec:
   type: LoadBalancer
   ports:
     - port: 80
+    - targetPort: 5001
   selector:
     app: server-gateway
