@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: product-service
+          image: mealrushapp.azurecr.io/mealrush/mealrushapp:product-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5003
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+#          env:
+#            - name: REDIS
+#              value: "azure-vote-back"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5003
+      protocol: TCP
+  selector:
+    app: product-service
