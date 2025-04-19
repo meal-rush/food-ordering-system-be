@@ -43,6 +43,6 @@ jobs:
         with:
           namespace: "default"
           manifests: |
-            server-gateway-deployment.yaml
+            server-gateway/server-gateway-deployment.yaml
           images: "${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/mealrushapp:server-gateway"
           pull-images: false
