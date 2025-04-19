@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-gateway
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: payment-gateway
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: payment-gateway
+          image: mealrushapp.azurecr.io/mealrush/mealrushapp:payment-gateway
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5005
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+#          env:
+#            - name: REDIS
+#              value: "azure-vote-back"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-gateway
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5005
+      protocol: TCP
+  selector:
+    app: payment-gateway
