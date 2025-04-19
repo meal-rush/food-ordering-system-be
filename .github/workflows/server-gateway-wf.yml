@@ -22,6 +22,7 @@ jobs:
           folder: server-gateway
           branch: master
           tag: ${{ github.sha }}
+          git_access_token: ${{ secrets.git_access_token }}
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3
