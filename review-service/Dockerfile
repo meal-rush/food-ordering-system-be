@@ -4,5 +4,5 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 RUN npm install
 COPY . /usr/src/app/
-EXPOSE 5007
+EXPOSE 5006
 CMD ["npm", "start"]
