@@ -21,7 +21,7 @@ spec:
         "kubernetes.io/os": linux
       containers:
         - name: server-gateway
-          image: ${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/mealrushapp:server-gateway
+          image: mealrushapp.azurecr.io/mealrush/mealrushapp:server-gateway
           imagePullPolicy: Always
           ports:
             - containerPort: 5001
