@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delivery-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: delivery-service
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: delivery-service
+          image: mealrushapp.azurecr.io/mealrush/mealrushapp:delivery-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5007
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+#          env:
+#            - name: REDIS
+#              value: "azure-vote-back"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5007
+      protocol: TCP
+  selector:
+    app: delivery-service
