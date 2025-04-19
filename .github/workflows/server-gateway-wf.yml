@@ -45,4 +45,4 @@ jobs:
           manifests: |
             server-gateway/server-gateway-deployment.yaml
           images: "${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/mealrushapp:server-gateway"
-          pull-images: false
+#          pull-images: false
