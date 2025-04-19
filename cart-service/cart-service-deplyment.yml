@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: cart-service
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: cart-service
+          image: mealrushapp.azurecr.io/mealrush/mealrushapp:cart-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5004
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+#          env:
+#            - name: REDIS
+#              value: "azure-vote-back"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5004
+      protocol: TCP
+  selector:
+    app: cart-service
