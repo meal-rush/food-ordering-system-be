@@ -21,7 +21,7 @@ jobs:
           image: mealrushapp
           folder: server-gateway
           branch: main
-          tag: ${{ github.sha }}
+          tag: server-gateway
           git_access_token: ${{ secrets.git_access_token }}
       - name: Azure login
         id: login
@@ -43,6 +43,6 @@ jobs:
         with:
           namespace: "default"
           manifests: |
-            azure-vote-all-in-one-redis.yaml
-          images: "${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/azure-vote-front:${{ github.sha }}"
+            server-gateway-deployment.yaml
+          images: "${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/mealrushapp:server-gateway"
           pull-images: false
