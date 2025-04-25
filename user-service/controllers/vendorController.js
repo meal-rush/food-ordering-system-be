@@ -17,6 +17,10 @@ const registerVendor = asyncHandler(async (req, res) => {
 		businessRegNumber,
 		description,
 		pic,
+		cuisineType,
+		openingTime,
+		closingTime,
+		availabilityStatus,
 	} = req.body;
 
 	const vendorExists = await Vendor.findOne({ email });
@@ -37,6 +41,10 @@ const registerVendor = asyncHandler(async (req, res) => {
 		businessRegNumber,
 		description,
 		pic,
+		cuisineType,
+		openingTime,
+		closingTime,
+		availabilityStatus,
 	});
 
 	const salt = await bcrypt.genSalt(10);
@@ -58,6 +66,10 @@ const registerVendor = asyncHandler(async (req, res) => {
 			businessRegNumber: vendor.businessRegNumber,
 			description: vendor.description,
 			pic: vendor.pic,
+			cuisineType: vendor.cuisineType,
+			openingTime: vendor.openingTime,
+			closingTime: vendor.closingTime,
+			availabilityStatus: vendor.availabilityStatus,
 			token: generateToken(vendor._id),
 		});
 	} else {
@@ -65,6 +77,7 @@ const registerVendor = asyncHandler(async (req, res) => {
 		throw new Error("Vendor Registration Failed !");
 	}
 });
+
 //authenticate vendor profile
 const authVendor = asyncHandler(async (req, res) => {
 	const { email, password } = req.body;
@@ -94,10 +107,15 @@ const authVendor = asyncHandler(async (req, res) => {
 			businessRegNumber: vendor.businessRegNumber,
 			description: vendor.description,
 			pic: vendor.pic,
+			cuisineType: vendor.cuisineType,
+			openingTime: vendor.openingTime,
+			closingTime: vendor.closingTime,
+			availabilityStatus: vendor.availabilityStatus,
 			token: generateToken(vendor._id),
 		});
 	}
 });
+
 //get all of vendors list
 const getVendors = asyncHandler(async (req, res) => {
 	const vendors = await Vendor.find();
@@ -143,6 +161,13 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
 		vendor.businessRegNumber = req.body.businessRegNumber || vendor.businessRegNumber;
 		vendor.description = req.body.description || vendor.description;
 		vendor.pic = req.body.pic || vendor.pic;
+		vendor.cuisineType = req.body.cuisineType || vendor.cuisineType;
+		vendor.openingTime = req.body.openingTime || vendor.openingTime;
+		vendor.closingTime = req.body.closingTime || vendor.closingTime;
+		// Special handling for boolean value - need to check if it's defined (could be false)
+		vendor.availabilityStatus =
+			req.body.availabilityStatus !== undefined ? req.body.availabilityStatus : vendor.availabilityStatus;
+
 		if (req.body.password) {
 			const salt = await bcrypt.genSalt(10);
 			vendor.password = await bcrypt.hash(req.body.password, salt);
@@ -161,6 +186,10 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
 			businessRegNumber: updatedVendor.businessRegNumber,
 			description: updatedVendor.description,
 			pic: updatedVendor.pic,
+			cuisineType: updatedVendor.cuisineType,
+			openingTime: updatedVendor.openingTime,
+			closingTime: updatedVendor.closingTime,
+			availabilityStatus: updatedVendor.availabilityStatus,
 			token: generateToken(updatedVendor._id),
 		});
 	} else {
@@ -184,6 +213,13 @@ const updateVendorProfileById = asyncHandler(async (req, res) => {
 		vendor.businessRegNumber = req.body.businessRegNumber || vendor.businessRegNumber;
 		vendor.description = req.body.description || vendor.description;
 		vendor.pic = req.body.pic || vendor.pic;
+		vendor.cuisineType = req.body.cuisineType || vendor.cuisineType;
+		vendor.openingTime = req.body.openingTime || vendor.openingTime;
+		vendor.closingTime = req.body.closingTime || vendor.closingTime;
+		// Special handling for boolean value - need to check if it's defined (could be false)
+		vendor.availabilityStatus =
+			req.body.availabilityStatus !== undefined ? req.body.availabilityStatus : vendor.availabilityStatus;
+
 		if (req.body.password) {
 			const salt = await bcrypt.genSalt(10);
 			vendor.password = await bcrypt.hash(req.body.password, salt);
@@ -202,6 +238,10 @@ const updateVendorProfileById = asyncHandler(async (req, res) => {
 			businessRegNumber: updatedVendor.businessRegNumber,
 			description: updatedVendor.description,
 			pic: updatedVendor.pic,
+			cuisineType: updatedVendor.cuisineType,
+			openingTime: updatedVendor.openingTime,
+			closingTime: updatedVendor.closingTime,
+			availabilityStatus: updatedVendor.availabilityStatus,
 			token: generateToken(updatedVendor._id),
 		});
 	} else {

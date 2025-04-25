@@ -51,6 +51,23 @@ const vendorSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		cuisineType: {
+			type: String,
+			required: false,
+		},
+		openingTime: {
+			type: String,
+			required: false,
+		},
+		closingTime: {
+			type: String,
+			required: false,
+		},
+		availabilityStatus: {
+			type: Boolean,
+			required: false,
+			default: true,
+		},
 		pic: {
 			type: String,
 			required: true,
