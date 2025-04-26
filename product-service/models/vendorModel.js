@@ -1,6 +1,6 @@
 /**
  * This model is implemented for
- * the Vendor management
+ * the Vendor
  */
 const mongoose = require("mongoose");
 
@@ -43,9 +43,30 @@ const vendorSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		businessRegNumber: {
+			type: String,
+			required: true,
+		},
 		description: {
 			type: String,
 			required: true,
+		},
+		cuisineType: {
+			type: String,
+			required: false,
+		},
+		openingTime: {
+			type: String,
+			required: false,
+		},
+		closingTime: {
+			type: String,
+			required: false,
+		},
+		availabilityStatus: {
+			type: Boolean,
+			required: false,
+			default: true,
 		},
 		pic: {
 			type: String,
