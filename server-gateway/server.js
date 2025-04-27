@@ -24,6 +24,8 @@ app.use("/rate", proxy("http://localhost:5006")); //proxy to access review manag
 app.use("/deliveries", proxy("http://localhost:5007")); //proxy to access delivery management service
 app.use("/orders", proxy("http://localhost:5008")); //proxy to access order management service
 
+app.use("/api/sms", proxy("http://localhost:5009")); //proxy to access notification management service
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, console.log(`Server Started on port ${PORT}..`));
 
