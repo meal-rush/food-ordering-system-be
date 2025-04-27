@@ -4,6 +4,18 @@
  */
 const mongoose = require("mongoose");
 
+const deliveryStatus = {
+	ORDER_CREATED: "Order Created",
+	PREPARING: "Preparing Order",
+	READY_TO_PICKUP: "Ready to Pickup",
+	SEARCHING_DRIVER: "Searching for Driver",
+	DRIVER_ASSIGNED: "Driver Assigned",
+	WAITING_PICKUP: "Waiting for Driver Pickup",
+	ON_THE_WAY: "On the Way",
+	ARRIVED: "Arrived",
+	COMPLETED: "Completed"
+};
+
 const deliverySchema = mongoose.Schema({
 	order: {
 		type: mongoose.Schema.Types.ObjectId,
@@ -45,9 +57,27 @@ const deliverySchema = mongoose.Schema({
 	status: {
 		type: String,
 		required: true,
+		enum: Object.values(deliveryStatus),
+		default: deliveryStatus.ORDER_CREATED
 	},
+
+	driver: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Driver",
+	},
+	driverName: {
+		type: String,
+	},
+	driverPhone: {
+		type: String,
+	},
+	locationUpdates: [{
+		timestamp: Date,
+		location: String,
+		status: String
+	}]
 });
 
 const Delivery = mongoose.model("Delivery", deliverySchema);
 
-module.exports = Delivery;
+module.exports = { Delivery, deliveryStatus };
