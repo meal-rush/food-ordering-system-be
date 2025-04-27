@@ -5,6 +5,8 @@ const {
 	getDeliveries,
 	getDeliveryById,
 	updateDelivery,
+	assignDriver,
+	updateLocation,
 } = require("../controllers/deliveriesController");
 
 const router = express.Router();
@@ -16,5 +18,7 @@ router.route("/all").get(getDeliveries);
 //delivery routes  for admin
 router.route("/customer/all/:id").get(getDeliveriesForEachCustomer);
 router.route("/get/:id").get(getDeliveryById).put(updateDelivery);
+router.route("/:id/assign-driver").put(assignDriver);
+router.route("/:id/update-location").put(updateLocation);
 
 module.exports = router;
