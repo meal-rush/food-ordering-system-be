@@ -8,6 +8,11 @@ const orderSchema = mongoose.Schema({
 		required: true,
 		ref: "Customer",
 	},
+	vendor: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: false, // Making it false to avoid breaking existing code
+		ref: "Vendor",
+	  },
 	products: {
 		type: String,
 		required: true,
