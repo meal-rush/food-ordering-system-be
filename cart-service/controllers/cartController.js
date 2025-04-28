@@ -16,7 +16,8 @@ const getTotal = asyncHandler(async (req, res) => {
 	var total = 0;
 	var i = 0;
 	while (i < items.length) {
-		total = total + (items[i].price - items[i].discountPrice) * items[i].quantity;
+		// total = total + (items[i].price - items[i].discountPrice) * items[i].quantity;
+		total = total + items[i].discountPrice * items[i].quantity;
 		i++;
 	}
 	var loopData = {
