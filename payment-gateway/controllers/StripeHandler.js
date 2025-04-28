@@ -1,5 +1,14 @@
-const StripeKey = process.env.STRIPE_SECRET_KEY; // Use environment variable for the Stripe key
+// Load environment variables from .env file
+const dotenv = require("dotenv");
 const Stripe = require("stripe");
+dotenv.config({ path: require("path").resolve(__dirname, "../.env") }); // Ensure correct .env path
+
+const StripeKey = process.env.STRIPE_SECRET_KEY; // Use environment variable for the Stripe key
+
+if (!StripeKey) {
+	throw new Error("STRIPE_SECRET_KEY is not defined in the .env file"); // Add error handling
+}
+
 const stripe = new Stripe(StripeKey);
 
 //create a payment in stripe payment gateway
