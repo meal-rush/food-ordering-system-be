@@ -12,3 +12,4 @@ app.use('/api/sms', smsRoutes);
 
 const PORT = process.env.PORT || 5009;
 app.listen(PORT, () => console.log(`SMS Service running on port ${PORT}`));
+//wf trigger comment
